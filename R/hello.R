@@ -33,3 +33,27 @@ convertCharacterColsToFactor <- function(df, exclude=NULL){
   return(dat)
 
 }
+
+#' Remove duplicate columns from a data frame
+#'
+#' @param df a dataframe
+#' @return The same dataframe without any duplicate columns (this is based on the name of the column)
+removeDuplicateColumns <- function(df){
+
+  data <- as.data.frame(df)
+  newdf <- data.frame()
+  for(i in 1:ncol(data)){
+    if(dim(newdf)[1] == 0){
+      newdf <- as.data.frame(data[,i])
+      names(newdf) <- names(data)[i]
+    } else if(names(data)[i] %in% names(newdf)){
+      print('Variable already in dataset')
+    } else {
+      newdf <- cbind(newdf, as.data.frame(data[,i]))
+      names(newdf) <- c(names(newdf)[1:length(names(newdf))-1], names(data)[i])
+    }
+  }
+  
+  return(newdf)
+
+}
