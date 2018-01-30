@@ -53,7 +53,42 @@ removeDuplicateColumns <- function(df){
       names(newdf) <- c(names(newdf)[1:length(names(newdf))-1], names(data)[i])
     }
   }
-  
+
   return(newdf)
 
+}
+
+#' Plots missing data by column in a simple bar chart
+#'
+#' @param df a dataframe
+#' @param prop A boolean: TRUE if you want proportions plotted, FALSE if you want raw numbers
+### want to write a function to inspect proportion of missing values
+plotMissing <- function(df, prop=TRUE){
+
+  # required packages
+  require(dplyr)
+  require(tidyr)
+  require(plotly)
+
+  # getting the baseline numbers
+  miss = sapply(df, function(x) sum(is.na(x)))
+  tots = sapply(df, length)
+
+  if(prop==TRUE){
+    mets <- as.data.frame(miss/tots)
+    mets$name <- row.names(mets)
+    names(mets) <- c('mets', 'name')
+    p <- plot_ly(data=mets, x=~name, y=~mets, type='bar') %>%
+      layout(margin=list(b=90, r=90), title='Proportion of Missing Data by Column',
+             xaxis=list(title='Column'), yaxis=list(title='Proportion Missing'))
+  } else {
+    mets <- as.data.frame(miss)
+    mets$name <- row.names(mets)
+    names(mets) <- c('mets', 'name')
+    p <- plot_ly(data=mets, x=~name, y=~mets, type='bar') %>%
+      layout(margin=list(b=90, r=90), title='Missing Data by Column',
+             xaxis=list(title='Column'), yaxis=list(title='Missing'))
+  }
+
+  print(p)
 }
