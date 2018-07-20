@@ -145,5 +145,53 @@ sumNAs <- function(col) {
 #' @param df a Dataframe
 #' @return An integer vector containing nas in the column
 detectNAs <- function(df) {
-  return(apply(df, 2, sumNAs))
+  naCols <- apply(df, 2, sumNAs)
+  naCols <- as.data.frame(naCols)
+  naCols$column <- row.names(naCols)
+  row.names(naCols) <- NULL
+  return(naCols)
+}
+
+#' Counts the number of blanks in a column
+#'
+#' @param col String: The column you want to use
+#' @return An integer with the number of blanks in that column
+sumBlanks <- function(col) {
+  return(sum(col==''))
+}
+
+#' Counts the number of blanks in all columns in a data frame
+#'
+#' @param df a Dataframe
+#' @return An integer vector containing blanks in the column
+detectBlanks <- function(df) {
+  blankCols <- apply(df, 2, sumBlanks)
+  blankCols <- as.data.frame(blankCols)
+  blankCols$column <- row.names(blankCols)
+  row.names(blankCols) <- NULL
+  return(blankCols)
+}
+
+#' Counts the number of distinct values in a character or factor column
+#'
+#' @param col the column you want to understand
+#' @return An integer with the number of distinct values
+cardinality <- function(col) {
+  if(class(col) == 'character') {
+    return(length(unique(col)))
+  } else {
+    return(-1)
+  }
+}
+
+#' Counts the number of unique values in all columns in a data frame
+#'
+#' @param df The dataframe
+#' @return a Dataframe of all of the columns and their cardinality
+detectCardinality <- function(df) {
+  cards <- sapply(df, cardinality)
+  cards <- as.data.frame(cards)
+  cards$column <- row.names(cards)
+  row.names(cards) <- NULL
+  return(cards)
 }
