@@ -195,3 +195,19 @@ detectCardinality <- function(df) {
   row.names(cards) <- NULL
   return(cards)
 }
+
+
+#' Reads in all csvs in a directory and returns them as one data frame. Folder must only contain csvs.
+#'
+#' @param dir String: the name of the directory with no trailing slash
+#' @return Dataframe: One dataframe containing all of the csvs
+read_dir <- function(dir){
+  require(data.table)
+  files <- list.files(dir)
+  storage <- data.frame()
+  for(file in files){
+    dat <- fread(paste0(dir, '/', file))
+    storage <- rbind(storage, dat)
+  }
+  return(storage)
+}
